@@ -1,0 +1,1459 @@
+#include<iostream>
+#include<iomanip>
+#include<stdlib.h>
+#include<time.h>
+#include <string.h>
+#include <fstream>
+using namespace std;
+
+//global declaration
+    string cityOrig1, cityDest1;//location varaibles flight 1
+    string cityOrig2, cityDest2;//Location variables flight 2
+    string datearv1, datedpt1, timedpt1, timearv1, tickprice1; //time variables flight 1
+    string datearv2, datedpt2, timedpt2, timearv2, tickprice2; //time variables flight 2
+    int orig1, dest1; //location menu flight 1
+    int orig2, dest2; //location menu flight 2
+    
+    string co,cd,dd,td,da,ta,tp,cn;//fstream variables
+    int rn;//fstream variables
+    
+const int row = 15, column = 6; //constant maximum seats		 
+char seat1 [row][column]; // seat plan 1
+char seat2 [row][column]; // seat plan 2
+int frow1 [100]; // stored values flight 1 (row)
+int frow2 [100]; // stored values flight 2 (row)
+char fcol1 [100]; // stored values flight 1 (column)
+char fcol2 [100]; // stored values flight 2 (column)
+int row1, row2, r1, r2; // array values and input (row)
+char col1, col2, c1, c2; // array values and input (column)
+int occu; //validation
+int ctr1; //counter
+
+int ticketNum, ticketNum2, ticketNum3, ticketNum4, ticketNum5, Paidticket, tickran, addfl1=0, addfl2=0;//ticketnum stored values
+int pass=0; //admin authorization
+int flightinp; //flight number input
+
+//functions
+char getmenu(); // main menu
+string getRPass(); // gets password
+string getRUser(); // gets username
+void loginMenu(); // log in menu
+void adminVerif(); //verifies if user is an admin
+void the_flights(); // shows the possible locations of a flight
+void admin_add_flight1(); // adds flight 1
+void admin_add_flight2(); //adds flight 2
+void showFlight1(); // shows flight 1
+void showFlight2(); // shows flight 2
+void display_seats1 (); // show seat plan 1
+void display_seats2 (); // show seat plan 2
+void resetseats (); // resets seat plan 1
+void resetseats2 (); //resets seat plan 2
+
+int main()
+{
+  //declaration
+  	string t1, t2, t3, t4, t5, t6, t7, t8, t9, t10;
+    char choice,answer,rchoice;
+    int citynum,countrynum,FlightNo,r;
+    int randMax=300000,randMin=200000;
+    int ctr,tickctr=0, tickprice,ticketYear=2019;
+    
+    //executable
+   loginMenu();
+  
+  
+   resetseats ();
+   resetseats2 ();
+    do
+    {
+      system("cls");
+      choice=getmenu();
+           
+      switch(choice)
+      {  
+                     
+      case '1':
+      	{
+      		system("cls");
+      		if(addfl1==1||addfl2==1)
+      		{
+		 if(tickctr<5)
+		  {
+      system("cls");
+      do
+			{
+				system("cls");
+      do
+			{
+				cout<<tickctr;
+				cout<<"Here are the flights available:"<<endl;
+				cout<<"_______________________________"<<endl;
+				showFlight1();
+				cout<<"_______________________________"<<endl;
+				showFlight2();
+				cout<<"_______________________________"<<endl;
+				cout<<"Please enter the desired flight No. (1-2): ";
+				cin>>flightinp;
+				
+				
+			} while(flightinp<1||flightinp>2);
+			
+			if(flightinp==1)
+			{
+				co=cityOrig1;
+				cd=cityDest1;
+				dd=datedpt1;
+				td=timedpt1;
+ 				da=datearv1;
+  				ta=timearv1;
+  				tp=tickprice1;
+			}
+			else if(flightinp==2)
+			{
+				co=cityOrig2;
+				cd=cityDest2;
+				dd=datedpt2;
+				td=timedpt2;
+ 				da=datearv2;
+  				ta=timearv2;
+  				tp=tickprice2;
+			}
+			else
+			{
+				cout<<"invalid input";
+			}
+			system("cls");
+			
+			if(flightinp == 1)
+{
+do{
+					
+					display_seats1 ();
+					cout << endl << endl;
+					do{
+						cout << "Enter row number [1-14]: ";
+						cin >> row1;
+						}while (row1 < 0 || row1 > 14);
+							row1 = row1 - 1;
+								do{
+									cout << "Enter column letter [A-F]: ";
+										cin >> col1;
+											col1 = toupper(col1);
+										}while (col1 < 'A' || col1 > 'F');
+										col1 = col1;
+										c1 = toupper(col1);
+										r1 = row1 + 1;
+	
+					for (int x = 0; x < 100; x++)
+					{
+						if (frow1 [x] == r1 && fcol1 [x] == c1)
+						{
+							occu = 1;
+							system ("cls");
+							cout << frow1 [x] << fcol1 [x] << " is taken" << endl
+							 	 << "Please enter a new seat" << endl;
+							break;
+						}
+						else
+							occu = 0;
+					}
+					}while (occu == 1);
+					
+					frow1 [ctr1] = r1;
+					fcol1 [ctr1] = c1;
+					col1 = int(col1) - 65;
+					seat1 [row1][col1] = 'X';
+					cn=c1;
+					rn=r1;
+					ctr1++;
+				}
+					if(flightinp == 2)
+					{
+					do{
+					system ("cls");
+						display_seats2 ();
+						cout << endl << endl;
+							do{
+								cout << "Enter row number [1-14]: ";
+								cin >> row2;
+							}while (row2 < 0 || row2 > 14);
+								row2 = row2 - 1;
+									do{
+										cout << "Enter column letter [A-F]: ";
+											cin >> col2;
+												col2 = toupper(col2);
+									}while (col2 < 'A' || col2 > 'F');
+										col2 = col2;
+										c2 = toupper(col2);
+										r2 = row2 + 1;
+				
+					for (int x = 0; x < 100; x++)
+					{
+						if (frow2 [x] == r2 && fcol2 [x] == c2)
+						{
+							occu = 1;
+							system ("cls");
+							cout << frow2 [x] << fcol2 [x] << " is taken" << endl
+							 	 << "Please enter a new seat" << endl;
+							break;
+						}
+						else
+							occu = 0;
+					}
+					}while (occu == 1);
+					
+					frow2 [ctr1] = r2;
+					fcol2 [ctr1] = c2;
+					col2 = int(col2) - 65;
+					seat2 [row2][col2] = 'X';
+					cn=c2;
+					rn=r2;
+					ctr1++;
+				}
+			do
+				{
+				cout<<"Enter [Y] to Confirm to buy a ticket or [N] to restart booking:";
+				cin>>rchoice;
+				
+				if(rchoice!='Y'&&rchoice!='y'&&rchoice!='N'&&rchoice!='n')
+				{
+					system("cls");
+					cout<<"Invalid input! Try again!"<<endl;
+					
+				}
+			}while((rchoice!='Y'&&rchoice!='y'&&rchoice!='N'&&rchoice!='n'));
+			if(rchoice=='N'||rchoice=='n')
+			{
+				if(flightinp==2)
+				seat2 [row2][col2] = 'O';
+				if(flightinp==1)
+				seat1 [row1][col1] = 'O';
+			}
+			}while(rchoice=='N'||rchoice=='n');
+
+
+        system("cls");
+            
+
+            
+        srand (time(NULL));
+        tickran=(ticketYear*1000000)+(rand()%(randMax-randMin)+randMin);
+        
+        
+       	if(tickctr==0)
+        ticketNum=tickran;
+	 else if(tickctr==1)
+		ticketNum2=tickran;
+	 else if(tickctr==2)
+		ticketNum3=tickran;
+	 else if(tickctr==3)
+		ticketNum4=tickran;
+	 else if(tickctr==4)
+		ticketNum5=tickran;
+	 else
+		cout<<"You can no longer book anymore tickets";
+	
+                	
+        cout<<"â€”------------------------------"<<endl;
+        if(tickctr==0)
+        {
+        cout<<"Mapua Airline Ticket "<<ticketNum<<endl;
+	 }
+	 else if(tickctr==1)
+	 {
+		cout<<"Mapua Airline Ticket "<<ticketNum2<<endl;
+		}
+	 else if(tickctr==2)
+	 {
+		cout<<"Mapua Airline Ticket "<<ticketNum3<<endl;
+		}
+	 else if(tickctr==3)
+	 {
+		cout<<"Mapua Airline Ticket "<<ticketNum4<<endl;
+		}
+	 else if(tickctr==4)
+	 {
+		cout<<"Mapua Airline Ticket "<<ticketNum5<<endl;
+		}
+	 else
+	 {
+		cout<<"You can no longer book any tickets";
+	}
+        cout<<endl;
+        cout<<"Flight No.: "<<flightinp<<endl;
+				cout<<"Destination: "<<cd<<endl;
+				cout<<"Date of Departure: "<<dd<<endl;
+				cout<<"Time of Departure: "<<td<<endl;
+				cout<<"Date of Arrival: "<<da<<endl;
+				cout<<"Time of Arrival: "<<ta<<endl;
+				cout<<"Ticket Price: "<<tp<<endl;
+				cout<<"Seat Number: "<<cn<<rn<<endl;
+        cout<<"â€”------------------------------"<<endl<<endl; 
+        
+    	ofstream outFile;
+    	if(tickctr==0)
+    	{
+		outFile.open("sample.txt");
+		outFile <<flightinp<<endl<<cd<<endl<<dd<<endl<<td<<endl<<da<<endl<<ta<<endl<<tp<<endl<<cn<<endl<<rn;
+		outFile.close();
+		}
+		else if(tickctr==1)
+		{
+		outFile.open("sample2.txt");
+		outFile <<flightinp<<endl<<cd<<endl<<dd<<endl<<td<<endl<<da<<endl<<ta<<endl<<tp<<endl<<cn<<endl<<rn;
+		outFile.close();
+		}
+		else if(tickctr==2)
+		{
+		outFile.open("sample3.txt");
+		outFile <<flightinp<<endl<<cd<<endl<<dd<<endl<<td<<endl<<da<<endl<<ta<<endl<<tp<<endl<<cn<<endl<<rn;
+		outFile.close();
+		}
+		else if(tickctr==3)
+		{
+		outFile.open("sample4.txt");
+		outFile <<flightinp<<endl<<cd<<endl<<dd<<endl<<td<<endl<<da<<endl<<ta<<endl<<tp<<endl<<cn<<endl<<rn;
+		outFile.close();
+		}
+		else if(tickctr==4)
+		{
+		outFile.open("sample5.txt");
+		outFile <<flightinp<<endl<<cd<<endl<<dd<<endl<<td<<endl<<da<<endl<<ta<<endl<<tp<<endl<<cn<<endl<<rn;
+		outFile.close();
+		}
+		
+		else
+		{
+		outFile.open("sample6.txt");
+		outFile <<flightinp<<endl<<cd<<endl<<dd<<endl<<td<<endl<<da<<endl<<ta<<endl<<tp<<endl<<cn<<endl<<rn;
+		outFile.close();
+		}
+	
+}
+else
+{
+	cout<<"You have availed the maximum amount of tickets";
+}
+tickctr++;
+}
+else
+{
+	cout<<"No flights available.";
+}
+      break;
+              }
+              
+              
+      case '2':
+	  {
+        system("cls");
+            
+        cout<<"Enter ticket number:";
+        cin>>Paidticket;    
+            
+        if(Paidticket==ticketNum){
+        	ifstream inFile;
+	inFile.open("sample.txt");
+	if (inFile.fail()) {
+		cerr<< "error opening file" << endl;
+	exit(1);
+	}
+	inFile>>t1>>t2>>t3>>t4>>t5>>t6>>t7>>t8>>t9;
+        cout<<endl;
+        cout<<"â€”------------------------------"<<endl;
+        cout<<"Mapua Airline Ticket "<<ticketNum<<endl;
+        cout<<endl;
+        cout<<"Flight No.: "<<t1<<endl;
+        		cout<<"Origin: "<<t2<<endl;
+				cout<<"Destination: "<<t3<<endl;
+				cout<<"Time of Departure: "<<t4<<endl;
+				cout<<"Date of Arrival: "<<t5<<endl;
+				cout<<"Time of Arrival: "<<t6<<endl;
+				cout<<"Ticket Price: "<<t7<<endl;
+				cout<<"Seat Number: "<<t8<<t9<<endl;
+        cout<<"â€”------------------------------"<<endl<<endl;     
+		inFile.close();  
+      }
+        else if(Paidticket==ticketNum2){
+        	ifstream inFile;
+	inFile.open("sample2.txt");
+	if (inFile.fail()) {
+		cerr<< "error opening file" << endl;
+	exit(1);
+	}
+	inFile>>t1>>t2>>t3>>t4>>t5>>t6>>t7>>t8>>t9;
+        cout<<endl;
+        cout<<"â€”------------------------------"<<endl;
+        cout<<"Mapua Airline Ticket "<<ticketNum2<<endl;
+        cout<<endl;
+        cout<<"Flight No.: "<<t1<<endl;
+        		cout<<"Origin: "<<t2<<endl;
+				cout<<"Destination: "<<t3<<endl;
+				cout<<"Time of Departure: "<<t4<<endl;
+				cout<<"Date of Arrival: "<<t5<<endl;
+				cout<<"Time of Arrival: "<<t6<<endl;
+				cout<<"Ticket Price: "<<t7<<endl;
+				cout<<"Seat Number: "<<t8<<t9<<endl;
+        cout<<"â€”------------------------------"<<endl<<endl;     
+		inFile.close();     
+      }
+      else if(Paidticket==ticketNum3){
+        	ifstream inFile;
+	inFile.open("sample3.txt");
+	if (inFile.fail()) {
+		cerr<< "error opening file" << endl;
+	exit(1);
+	}
+	inFile>>t1>>t2>>t3>>t4>>t5>>t6>>t7>>t8>>t9;
+        cout<<endl;
+        cout<<"â€”------------------------------"<<endl;
+        cout<<"Mapua Airline Ticket "<<ticketNum3<<endl;
+        cout<<endl;
+        cout<<"Flight No.: "<<t1<<endl;
+        		cout<<"Origin: "<<t2<<endl;
+				cout<<"Destination: "<<t3<<endl;
+				cout<<"Time of Departure: "<<t4<<endl;
+				cout<<"Date of Arrival: "<<t5<<endl;
+				cout<<"Time of Arrival: "<<t6<<endl;
+				cout<<"Ticket Price: "<<t7<<endl;
+				cout<<"Seat Number: "<<t8<<t9<<endl;
+        cout<<"â€”------------------------------"<<endl<<endl;     
+		inFile.close();  
+      }
+      else if(Paidticket==ticketNum4){
+        	ifstream inFile;
+	inFile.open("sample4.txt");
+	if (inFile.fail()) {
+		cerr<< "error opening file" << endl;
+	exit(1);
+	}
+	inFile>>t1>>t2>>t3>>t4>>t5>>t6>>t7>>t8>>t9;
+        cout<<endl;
+        cout<<"â€”------------------------------"<<endl;
+        cout<<"Mapua Airline Ticket "<<ticketNum4<<endl;
+        cout<<endl;
+        cout<<"Flight No.: "<<t1<<endl;
+        		cout<<"Origin: "<<t2<<endl;
+				cout<<"Destination: "<<t3<<endl;
+				cout<<"Time of Departure: "<<t4<<endl;
+				cout<<"Date of Arrival: "<<t5<<endl;
+				cout<<"Time of Arrival: "<<t6<<endl;
+				cout<<"Ticket Price: "<<t7<<endl;
+				cout<<"Seat Number: "<<t8<<t9<<endl;
+        cout<<"â€”------------------------------"<<endl<<endl;     
+		inFile.close();  
+      }
+      else if(Paidticket==ticketNum5){
+        	ifstream inFile;
+	inFile.open("sample5.txt");
+	if (inFile.fail()) {
+		cerr<< "error opening file" << endl;
+	exit(1);
+	}
+		inFile>>t1>>t2>>t3>>t4>>t5>>t6>>t7>>t8>>t9;
+        cout<<endl;
+        cout<<"â€”------------------------------"<<endl;
+        cout<<"Mapua Airline Ticket "<<ticketNum5<<endl;
+        cout<<endl;
+        cout<<"Flight No.: "<<t1<<endl;
+        		cout<<"Origin: "<<t2<<endl;
+				cout<<"Destination: "<<t3<<endl;
+				cout<<"Time of Departure: "<<t4<<endl;
+				cout<<"Date of Arrival: "<<t5<<endl;
+				cout<<"Time of Arrival: "<<t6<<endl;
+				cout<<"Ticket Price: "<<t7<<endl;
+				cout<<"Seat Number: "<<t8<<t9<<endl;
+        cout<<"â€”------------------------------"<<endl<<endl;     
+		inFile.close();   
+      }
+        
+        else
+          cout<<"Invalid ticket number"<<endl;      
+            
+      break;           
+         
+      }
+      
+    	case '3':
+      	{
+      		system("cls");
+      		if(addfl1==1||addfl2==1)
+      		{
+      		cout<<"Here are the flights available:"<<endl;
+				cout<<"_______________________________"<<endl;
+				showFlight1();
+				cout<<"_______________________________"<<endl;
+				showFlight2();
+				cout<<"_______________________________"<<endl;
+			}
+				else
+				{
+				cout<<"No flights available.";
+				}
+      		break;
+		  }
+		case '4':
+      	{
+      		int flightNo;
+      		adminVerif();
+      		if(pass==1)
+      		{
+      			do{
+			system("cls");
+			cout 	 << "Choose flight No. [1/2]: ";
+			cin  >> flightNo;
+		}while (flightNo < 1 || flightNo > 2);
+		
+		
+		if (flightNo == 1)
+		{
+			admin_add_flight1();
+		}
+		if (flightNo == 2)
+		{
+			admin_add_flight2();
+		}
+			  }
+			else
+			{
+			
+			}
+			
+      		break;
+		  }
+		  
+      case '5':
+      	{
+      		exit(0);
+      		break;
+		  }
+      
+    
+    }//end switch
+      do{                                
+        cout<<endl;    
+        cout<<"Would you like to go back to the menu?[y/n]:";
+        cin>>answer;           
+            
+        system("cls");     
+              
+        }while(!(answer=='y'||answer=='n'||answer=='N'||answer=='Y'));
+        
+    }while(answer=='y'||answer=='Y');
+}//end main
+
+/////////////////////////////////////////
+char getmenu()
+{
+  //declaration
+    char opt;
+  //execution
+    do{
+    system("cls"); 
+          
+    cout<<"**********MENU**********"<<endl
+        <<"[1] Book Flight"<<endl
+        <<"[2] Search By Ticket"<<endl
+        <<"[3] View Flights"<<endl
+        <<"[4] Add/Change flight"<<endl
+        <<"[5] Exit "<<endl
+        <<"************************"<<endl
+        <<"Enter your choice:";
+    cin>>opt;
+        
+    }while(opt<'1'||opt>'6');
+     
+    return opt;
+}
+
+void loginMenu()
+{
+	string passw;
+    string usern;
+    string userinp, passinp;
+    int choice; 
+	char logchoice;
+    do{
+    	do{
+	 system("cls");	
+    cout<<"**********MENU**********"<<endl
+        <<"[1] Login"<<endl
+        <<"[2] Register"<<endl
+        <<"[3] Exit"<<endl
+        <<"*************************"<<endl
+        <<"Enter your choice:";
+    cin>>choice;
+    system("cls");
+		}while(choice<1||choice>3);
+switch(choice)
+{
+	case 1:
+		{	
+		do{
+			cout<<"Username:";
+			cin>>userinp;
+			
+			cout<<"Password:";
+			cin>>passinp;
+			if(!(passinp == passw && userinp == userinp))
+			{
+				passinp="";
+			userinp="";
+			cout<< "Invalid username or password/n"<<"would you like to try again? (y/n)";
+			cin>>logchoice;
+		}
+		else
+		{
+		cout<<"";
+		logchoice='n';
+	}
+			
+			
+			
+			
+			}while(logchoice == 'y');
+			system("cls");
+			
+			break;
+		}
+	
+	case 2:
+		{
+			cin.ignore(1000, '\n');
+			usern=getRUser();
+			passw=getRPass();
+	       system("cls");
+			break;
+		}
+	case 3:
+		{
+			exit(0);
+			break;
+		}
+}
+}while(!(passinp == passw && userinp == userinp) || userinp == "" && passinp == "");
+}
+
+
+string getRUser()
+{
+	 system("cls");
+	char user[100];
+	string usern;
+	cout<<"Please enter a username(6 or more characters required)\n";
+	
+	while(strlen(user) < 6)
+	{
+ 	cin.getline (user, 256);
+ 	
+ 	if(strlen(user) < 6)
+ 	{
+    cout<<"Username is too short\n";
+    }
+    }    
+    usern=user;
+	return usern;
+}
+
+
+
+string getRPass()
+{
+	 system("cls");
+ bool hasUpper = false;
+ bool hasLower = false;
+ bool hasDigit = false;
+ int i = 0;
+ char pass[100];
+ string passw;
+ char choose = 'Y';
+
+ do
+ {
+cout<<"Please enter password(6 or more characters required)\n";
+
+
+while(strlen(pass) < 6)
+{
+ cin.getline (pass, 256);
+for(int i =0; i < strlen(pass); ++i) //this loop goes through each character to see if it was lowercase, uppercase a digit or a space
+{
+ 
+    if( islower(pass[i]) )
+        hasLower = true;
+ 
+    if( isupper(pass[i]) )
+        hasUpper = true;
+ 
+    if( isdigit(pass[i]) )
+        hasDigit = true;
+}
+ 
+if(strlen(pass) < 6)
+{
+    cout<<"Password is too short\n"<<"Try again!\n";
+}
+else if(hasLower && hasUpper && hasDigit)
+{
+    cout<<"Strong Password\n";
+}
+else if((hasLower && hasDigit) || (hasLower && hasUpper) || (hasUpper && hasDigit))
+{
+    cout<<"Medium Password\n";
+}
+else
+{
+    cout<<"Weak Password\n";
+}  
+}
+cout<<"Are you sure you wanna use this password?(y/n)";
+cin>>choose;
+ system("cls");
+}while(choose=='n'||choose=='N');
+passw=pass;
+return passw;
+}
+
+void adminVerif()
+{
+	//declaration
+	string password;
+	//executable
+	system("cls");
+	if(pass!=1)
+	{
+	cout<<"[ADMIN RESTRICTED OPTION]"<<endl;
+	cout<<"[ADMIN PASSWORD REQUIRED]"<<endl;
+	cout<<"Enter Password Verification: ";
+	cin>>password;
+	if(password=="SALAD")
+		pass=1;
+	else
+	cout<<"Password is incorrect!";
+	}
+		else
+		cout<< "Admin recognized!";
+}
+
+void admin_add_flight1()//cityDest,timedpt,datedpt,timearv,datearv
+                {
+               
+ 
+       
+               do
+                    {
+                        the_flights();
+                    cout<<"Enter Flight Origin: ";
+                        cin>>orig1;
+                         system("cls");
+            
+ 
+        } while(orig1>20&&orig1<0);
+            
+			switch(orig1)
+            {
+                case 1:
+                    {
+                        cityOrig1 = "Bacolod";  
+                        break;
+                    }
+                   
+                case 2:
+                    {
+                        cityOrig1 = "Batanes-(Basco)";
+                        break;
+                    }
+                   
+                case 3:
+                    {
+                        cityOrig1 = "Bohol";
+                        break;
+                    }
+                case 4:
+                    {
+                        cityOrig1 = "Boracay-(Caticlan)";   
+                        break;
+                    }
+                case 5:
+                    {
+                        cityOrig1 = "Butuan";   
+                        break;
+                    }
+                case 6:
+                    {
+                        cityOrig1 = "Cagayan-de-Oro";   
+                        break;
+                    }
+                case 7:
+                    {
+                        cityOrig1 = "Calbayog"; 
+                        break;
+                    }
+                case 8:
+                    {
+                        cityOrig1 = "Camiguin"; 
+                        break;
+                    }
+                case 9:
+                    {
+                        cityOrig1 = "Cauayan";  
+                        break; 
+                    }
+                case 10:
+                    {
+                        cityOrig1 = "Cebu"; 
+                        break;
+                    }
+                case 11:
+                    {
+                        cityOrig1 = "Clark";
+                        break;
+                    }
+                case 12:
+                    {
+                        cityOrig1 = "Coron-(Busuanga)"; 
+                        break;
+                    }
+                case 13:
+                    {
+                        cityOrig1 = "Cotabato"; 
+                        break; 
+                    }
+                case 14:
+                    {
+                        cityOrig1 = "Davao";
+                        break;
+                    }
+                case 15:
+                    {
+                        cityOrig1 = "Dipolog";  
+                        break;
+                    }
+                case 16:
+                    {
+                        cityOrig1 = "Dumaguete";
+                        break;
+                    }
+                case 17:
+                    {
+                        cityOrig1 = "General-Santos";   
+                        break;
+                    }
+                case 18:
+                    {
+                        cityOrig1 = "Iloilo";   
+                        break;
+                    }
+                case 19:
+                    {
+                        cityOrig1 = "Kalibo";   
+                        break;
+                    }
+                case 20:
+                    {
+                        cityOrig1 = "Manila";   
+                        break;
+                    }
+                    
+                }
+                  
+                  do
+                    {
+                    	the_flights();
+                    cout<<"Enter Flight dest1ination: ";
+                        cin>>dest1;
+                        cout<<endl;
+                        system ("cls");
+                        if(orig1==dest1)
+                        cout<<"Your flight origin can't be the same as your destination."<<endl;
+                    }   while(dest1>20&&dest1<0||orig1==dest1);
+            
+			switch(dest1)
+            {
+                case 1:
+                    {
+                        cityDest1 = "Bacolod";  
+                        break;
+                    }
+                   
+                case 2:
+                    {
+                        cityDest1 = "Batanes-(Basco)";
+                        break;
+                    }
+                   
+                case 3:
+                    {
+                        cityDest1 = "Bohol";
+                        break;
+                    }
+                case 4:
+                    {
+                        cityDest1 = "Boracay-(Caticlan)";   
+                        break;
+                    }
+                case 5:
+                    {
+                        cityDest1 = "Butuan";   
+                        break;
+                    }
+                case 6:
+                    {
+                        cityDest1 = "Cagayan-de-Oro";   
+                        break;
+                    }
+                case 7:
+                    {
+                        cityDest1 = "Calbayog"; 
+                        break;
+                    }
+                case 8:
+                    {
+                        cityDest1 = "Camiguin"; 
+                        break;
+                    }
+                case 9:
+                    {
+                        cityDest1 = "Cauayan";  
+                        break;
+                    }
+                case 10:
+                    {
+                        cityDest1 = "Cebu"; 
+                        break;
+                    }
+                case 11:
+                    {
+                        cityDest1 = "Clark";
+                        break;
+                    }
+                case 12:
+                    {
+                        cityDest1 = "Coron-(Busuanga)"; 
+                        break;
+                    }
+                case 13:
+                    {
+                        cityDest1 = "Cotabato"; 
+                        break; 
+                    }
+                case 14:
+                    {
+                        cityDest1 = "Davao";
+                        break;
+                    }
+                case 15:
+                    {
+                        cityDest1 = "Dipolog";  
+                        break;
+                    }
+                case 16:
+                    {
+                        cityDest1 = "Dumaguete";
+                        break;
+                    }
+                case 17:
+                    {
+                        cityDest1 = "General-Santos";   
+                        break;
+                    }
+                case 18:
+                    {
+                        cityDest1 = "Iloilo";   
+                        break;
+                    }
+                case 19:
+                    {
+                        cityDest1 = "Kalibo";   
+                        break;
+                    }
+                case 20:
+                    {
+                        cityDest1 = "Manila";   
+                        break;
+                    }
+                }
+                                          
+ 
+                        cout<<"Enter Flight Departure Time (MILITARY TIME FORMAT): ";
+                        cin>>timedpt1;
+                        cout<<endl;
+                        system ("cls");
+             
+                    
+                        cout<<"Enter Flight Departure date (MMDDYYYY): ";
+                        cin>>datedpt1;
+                        cout<<endl;
+                        system ("cls"); 
+      
+                        cout<<"Enter Flight Arrival Time (MILITARY TIME FORMAT): ";
+                        cin>>timearv1;
+                        cout<<endl;
+                        system ("cls");
+                
+               
+                        cout<<"Enter Flight Arrival Date (MMDDYYYY): ";
+                        cin>>datearv1;
+                        cout<<endl;
+                        system ("cls");
+      
+                        cout<<"Enter Flight Cost: ";
+                        cin>>tickprice1;
+                        cout<<endl;
+                        system ("cls");
+                            cout<<"_______________________________"<<endl;
+    						cout<<"[1]"<<endl;
+    						cout<<"Flight No.: 1"<<endl;
+    						cout<<"Origin: "<<cityOrig1<<endl;
+    						cout<<"Destination: "<<cityDest1<<endl;
+   							cout<<"Date of Departure: "<<datedpt1<<endl;\
+   							cout<<"Time of Departure: "<<timedpt1<<endl;
+   							cout<<"Date of Arrival: "<<datearv1<<endl;
+    						cout<<"Time of Arrival: "<<timearv1<<endl;
+                        addfl1=1;
+          
+ 
+                }//FUNCTION END ADMIN ADD FLIGHT 1
+           
+               
+void admin_add_flight2()//cityDest,timedpt,datedpt,timearv,datearv
+                {
+               
+               
+                do
+                    {
+                        the_flights();
+                    cout<<"Enter Flight Origin: ";
+                        cin>>orig2;
+                        system("cls");
+                        } while(orig2>20&&orig2<0);
+                         switch(orig2)
+            {
+                case 1:
+                    {
+                        cityOrig2 = "Bacolod";  
+                        break;
+                    }
+                   
+                case 2:
+                    {
+                        cityOrig2 = "Batanes-(Basco)";
+                        break;
+                    }
+                   
+                case 3:
+                    {
+                        cityOrig2 = "Bohol";
+                        break;
+                    }
+                case 4:
+                    {
+                        cityOrig2 = "Boracay-(Caticlan)";   
+                        break;
+                    }
+                case 5:
+                    {
+                        cityOrig2 = "Butuan";   
+                        break;
+                    }
+                case 6:
+                    {
+                        cityOrig2 = "Cagayan-de-Oro";   
+                        break;
+                    }
+                case 7:
+                    {
+                        cityOrig2 = "Calbayog"; 
+                        break;
+                    }
+                case 8:
+                    {
+                        cityOrig2 = "Camiguin"; 
+                        break;
+                    }
+                case 9:
+                    {
+                        cityOrig2 = "Cauayan";  
+                        break; 
+                    }
+                case 10:
+                    {
+                        cityOrig2 = "Cebu"; 
+                        break;
+                    }
+                case 11:
+                    {
+                        cityOrig2 = "Clark";
+                        break;
+                    }
+                case 12:
+                    {
+                        cityOrig2 = "Coron-(Busuanga)"; 
+                        break;
+                    }
+                case 13:
+                    {
+                        cityOrig2 = "Cotabato"; 
+                        break; 
+                    }
+                case 14:
+                    {
+                        cityOrig2 = "Davao";
+                        break;
+                    }
+                case 15:
+                    {
+                        cityOrig2 = "Dipolog";  
+                        break;
+                    }
+                case 16:
+                    {
+                        cityOrig2 = "Dumaguete";
+                        break;
+                    }
+                case 17:
+                    {
+                        cityOrig2 = "General-Santos";   
+                        break;
+                    }
+                case 18:
+                    {
+                        cityOrig2 = "Iloilo";   
+                        break;
+                    }
+                case 19:
+                    {
+                        cityOrig2 = "Kalibo";   
+                        break;
+                    }
+                case 20:
+                    {
+                        cityOrig2 = "Manila";   
+                        break;
+                    }
+                   cout<<endl;
+            }
+ 
+        
+                  do
+                    {
+                    	the_flights();
+                    cout<<"Enter Flight Destination: ";
+                        cin>>dest2;
+                        cout<<endl;
+                        system ("cls");
+                        if(orig2==dest2)
+                        cout<<"Your flight origin can't be the same as your destination."<<endl;
+                        
+                    }   while(dest2>20&&dest2<0||orig2==dest2); 
+                        switch(dest2)
+            {
+                case 1:
+                    {
+                        cityDest2 = "Bacolod";  
+                        break;
+                    }
+                   
+                case 2:
+                    {
+                        cityDest2 = "Batanes-(Basco)";
+                        break;
+                    }
+                   
+                case 3:
+                    {
+                        cityDest2 = "Bohol";
+                        break;
+                    }
+                case 4:
+                    {
+                        cityDest2 = "Boracay-(Caticlan)";   
+                        break;
+                    }
+                case 5:
+                    {
+                        cityDest2 = "Butuan";   
+                        break;
+                    }
+                case 6:
+                    {
+                        cityDest2 = "Cagayan-de-Oro";   
+                        break;
+                    }
+                case 7:
+                    {
+                        cityDest2 = "Calbayog"; 
+                        break;
+                    }
+                case 8:
+                    {
+                        cityDest2 = "Camiguin"; 
+                        break;
+                    }
+                case 9:
+                    {
+                        cityDest2 = "Cauayan";  
+                        break; 
+                    }
+                case 10:
+                    {
+                        cityDest2 = "Cebu"; 
+                        break;
+                    }
+                case 11:
+                    {
+                        cityDest2 = "Clark";
+                        break;
+                    }
+                case 12:
+                    {
+                        cityDest2 = "Coron-(Busuanga)"; 
+                        break;
+                    }
+                case 13:
+                    {
+                        cityDest2 = "Cotabato"; 
+                        break; 
+                    }
+                case 14:
+                    {
+                        cityDest2 = "Davao";
+                        break;
+                    }
+                case 15:
+                    {
+                        cityDest2 = "Dipolog";  
+                        break;
+                    }
+                case 16:
+                    {
+                        cityDest2 = "Dumaguete";
+                        break;
+                    }
+                case 17:
+                    {
+                        cityDest2 = "General-Santos";   
+                        break;
+                    }
+                case 18:
+                    {
+                        cityDest2 = "Iloilo";   
+                        break;
+                    }
+                case 19:
+                    {
+                        cityDest2 = "Kalibo";   
+                        break;
+                    }
+                case 20:
+                    {
+                        cityDest2 = "Manila";   
+                        break;
+                    }
+                    }
+					
+					               
+     
+                        cout<<"Enter Flight Departure Time (MILITARY TIME FORMAT): ";
+                        cin>>timedpt2;
+                        cout<<endl;
+                        system ("cls");
+                    
+              
+                        cout<<"Enter Flight Departure date (MMDDYYYY): ";
+                        cin>>datedpt2;
+                        cout<<endl;
+                        system ("cls"); 
+           
+                        cout<<"Enter Flight Arrival Time (MILITARY TIME FORMAT): ";
+                        cin>>timearv2;
+                        cout<<endl;
+                        system ("cls");
+             
+                    
+                        cout<<"Enter Flight Arrival Date (MMDDYYYY): ";
+                        cin>>datearv2;
+                        cout<<endl;
+                        system ("cls");
+                    
+                        cout<<"Enter Flight Cost: ";
+                        cin>>tickprice2;
+                        cout<<endl;
+                        system ("cls");
+                  		
+                  		cout<<"_______________________________"<<endl;
+    					cout<<"[2]"<<endl;
+    					cout<<"Flight No.: 2"<<endl;
+  					  	cout<<"Origin: "<<cityOrig2<<endl;
+    					cout<<"Destination: "<<cityDest2<<endl;
+    					cout<<"Date of Departure: "<<datedpt2<<endl;
+    					cout<<"Time of Departure: "<<timedpt2<<endl;
+    					cout<<"Date of Arrival: "<<datearv2<<endl;
+    					cout<<"Time of Arrival: "<<timearv2<<endl;
+                  		addfl2=1;
+ 
+                }
+            
+                
+void the_flights()
+        {
+       
+        cout<<"====================DOMESTIC CITIES======================"<<endl
+            <<"ENTER CITY [1-20]"<<endl
+            <<"[1]  BCD-Bacolod             [11]    CRK-Clark           "<<endl
+            <<"[2]  BSO-Batanes-(Basco)     [12]    USU-Coron-(Busuanga)"<<endl
+            <<"[3]  TAG-Bohol               [13]    CBO-Cotabato        "<<endl
+            <<"[4]  MPH-Boracay-(Caticlan)  [14]    DVO-Davao           "<<endl
+            <<"[5]  BXU-Butuan              [15]    DPL-Dipolog         "<<endl
+            <<"[6]  CGY-Cagayan-de-Oro      [16]    DGT-Dumaguete       "<<endl
+            <<"[7]  CYP-Calbayog            [17]    GES-General-Santos  "<<endl
+            <<"[8]  CGM-Camiguin            [18]    ILO-Iloilo          "<<endl
+            <<"[9]  CYZ-Cauayan             [19]    KLO-Kalibo          "<<endl
+            <<"[10] CEB-Cebu                [20]    MNL-Manila          "<<endl
+            <<"========================================================="<<endl;
+       
+        }
+        
+void showFlight1()
+{
+    //declaration
+   
+    //executable
+    if (addfl1==1)
+    {
+    cout<<"_______________________________"<<endl;
+    cout<<"[1]"<<endl;
+    cout<<"Flight No.: 1"<<endl;
+    cout<<"Origin: "<<cityOrig1<<endl;
+    cout<<"Destination: "<<cityDest1<<endl;
+    cout<<"Date of Departure: "<<datedpt1<<endl;\
+    cout<<"Time of Departure: "<<timedpt1<<endl;
+    cout<<"Date of Arrival: "<<datearv1<<endl;
+    cout<<"Time of Arrival: "<<timearv1<<endl;
+	}
+	else
+	{
+		cout<<"*"<<endl;
+	}
+}
+///////////////////////////
+void showFlight2()
+{
+    //declaration
+   
+    //executable
+    if (addfl2==1)
+    {
+    cout<<"_______________________________"<<endl;
+    cout<<"[2]"<<endl;
+    cout<<"Flight No.: 2"<<endl;
+    cout<<"Origin: "<<cityOrig2<<endl;
+    cout<<"Destination: "<<cityDest2<<endl;
+    cout<<"Date of Departure: "<<datedpt2<<endl;
+    cout<<"Time of Departure: "<<timedpt2<<endl;
+    cout<<"Date of Arrival: "<<datearv2<<endl;
+    cout<<"Time of Arrival: "<<timearv2<<endl;
+	}
+	else
+	{
+		cout<<"*"<<endl;
+	}
+	
+}
+
+	void display_seats1 ()
+	{	
+	cout<<"================== SEAT RESERVATION =================="<<endl
+		<<"                           L  E   G   E   N   D "<<endl
+		<<"                         ROW [0-14], COLOUMN [A-F]"<<endl
+		<<"                         O = VACANT   X = TAKEN"<<endl
+		<<"           ___           "<<endl
+		<<"         _______         "<<endl
+	    <<"      ------------       "<<endl                        
+		<<"   __________________					"<<endl
+		<<"     A  B  C  D  E  F  ";
+		for (int count = 0; count < row - 1; count++)
+		{
+			cout<<endl<<endl<<(count + 1);
+			if (count<=9)
+			{
+				cout<<" |";
+			}
+			else if(count>9)
+			{
+				cout<<"|";
+			}
+			for (int count2 = 0; count2 < column; count2++)
+				{
+					cout<<setw(2)<< " " <<seat1[count][count2];
+					if (count2==2)
+					{
+						cout<<setw(2)<< " ";
+					}
+				}
+			cout<<" |";
+		}
+	cout<<endl
+		<<"   _________________________"<<endl
+	 	<<"      ___________________"<<endl
+		<<"         _____________"<<endl
+		<<"           _________"<<endl
+	   	<<"======================================================"<<endl;  
+	}
+		
+	void display_seats2 ()
+	{	
+			cout<<"================== SEAT RESERVATION =================="<<endl
+		<<"                           L  E   G   E   N   D "<<endl
+		<<"                           ROW [0-14], COLOUMN [A-F]"<<endl
+		<<"                           O = VACANT   X = TAKEN"<<endl
+		<<"          ______           "<<endl
+		<<"       ____________        "<<endl
+	    <<"      --------------       "<<endl                        
+		<<"   ___________________					"<<endl
+		<<"     A  B  C  D  E  F  ";
+		for (int count = 0; count < row - 1; count++)
+		{
+			cout<<endl<<endl<<(count + 1);
+			if (count<=9)
+			{
+				cout<<" |";
+			}
+			else if(count>9)
+			{
+				cout<<"|";
+			}
+			for (int count2 = 0; count2 < column; count2++)
+				{
+					cout<<setw(2)<< " " <<seat2[count][count2];
+					if (count2==2)
+					{
+						cout<<setw(2)<< " ";
+					}
+				}
+			cout<<" |";
+		}
+	cout<<endl
+		<<"   _________________________"<<endl
+	 	<<"      ___________________"<<endl
+		<<"         _____________"<<endl
+		<<"           _________"<<endl
+	   	<<"======================================================"<<endl;  
+	}
+	
+	void resetseats ()
+                {
+                    for(int x1 = 0; x1 < 100; x1++)
+                        {
+                            for(int y1 = 0; y1 < 100; y1++)
+                                seat1[x1][y1]='O';
+                        }
+                }
+    void resetseats2 ()
+                {
+                    for (int x2 = 0; x2 < 100; x2++)
+                        {
+                            for (int y2 = 0; y2 < 100; y2++)
+                                seat2[x2][y2]='O';
+                        }
+                }
